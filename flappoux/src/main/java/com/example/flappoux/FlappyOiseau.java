@@ -1,5 +1,7 @@
 package com.example.flappoux;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -14,12 +16,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
+import java.io.File;
 import java.util.Random;
 
 public class FlappyOiseau extends Application {
     // Constantes
-
     private static final int LARGEUR = 800;
     private static final int HAUTEUR = 600;
     private static final int LARGEUROBSTACLE = 50;
@@ -28,7 +31,31 @@ public class FlappyOiseau extends Application {
     private static final int TAILLEOISEAU = 30;
     private static final int GRAVITE = 10;
 
+    private static final String ambianceSoundPath = "C:/Users/mkism/IdeaProjects/flappoux/sounds/ambiance.mp3";
+
+    private static final Media ambianceSound = new Media(new File(ambianceSoundPath).toURI().toString());
+
+    private static final String obstacleSoundPath = "C:/Users/mkism/IdeaProjects/flappoux/sounds/franchissementobstacle.mp3";
+
+    private static final Media obstacleSound = new Media(new File(obstacleSoundPath).toURI().toString());
+
+    private static final String jumpSoundPath = "C:/Users/mkism/IdeaProjects/flappoux/sounds/saut.mp3";
+
+    private static final Media jumpSound = new Media(new File(jumpSoundPath).toURI().toString());
+
     // Variables du jeu
+
+    // Création de l'objet MediaPlayer pour le son d'ambiance
+    MediaPlayer ambiancePlayer = new MediaPlayer(ambianceSound);
+
+    // Création de l'objet MediaPlayer pour le son de passage d'obstacle
+    MediaPlayer obstaclePlayer = new MediaPlayer(obstacleSound);
+
+    // Création de l'objet MediaPlayer pour le son de saut
+    MediaPlayer jumpPlayer = new MediaPlayer(jumpSound);
+
+    private Text pauseText;
+    private Rectangle pauseButton ;
     private int score = 0;
     private double positionOiseauY = HAUTEUR / 2;
     private double oiseauVitesseY = 0;
@@ -95,6 +122,10 @@ public class FlappyOiseau extends Application {
         root.getChildren().add(scoreText);
         //endregion
 
+        //Son d'ambiance
+        ambiancePlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        ambiancePlayer.play();
+
 
         startButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -103,10 +134,9 @@ public class FlappyOiseau extends Application {
                 root.getChildren().remove(title);
                 root.getChildren().remove(startButton);
                 root.getChildren().remove(startText);
+
             }
         });
-
-
 
         // Evènement saut grâce à l'espace et evenement PAUSE grace à escape
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -114,11 +144,13 @@ public class FlappyOiseau extends Application {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
                     if(isPlaying==true){
-                    oiseauVitesseY = -GRAVITE;}
+                    oiseauVitesseY = -GRAVITE;
+
+                    sonPlayer(jumpPlayer);
+                    }
                 }else if (event.getCode() == KeyCode.ESCAPE) {
                     isPlaying = !isPlaying;
-                    /*Text pauseText = null;
-                    Rectangle pauseButton = null;
+
 
                     if(isPlaying==false) {
                         pauseButton = new Rectangle(LARGEUR / 2 - 50, HAUTEUR / 2, 100, 50);
@@ -132,11 +164,13 @@ public class FlappyOiseau extends Application {
                         pauseText.setY(pauseButton.getY() + pauseButton.getHeight() / 2);
                         root.getChildren().add(pauseText);
 
-                    }else {
-                        root.getChildren().remove(pauseText);
+                        // Désactiver les événements de la souris et du clavier
+                        scene.setOnMouseClicked(null);
+                    } else {
+                        // Supprimer le bouton PAUSE et le texte
                         root.getChildren().remove(pauseButton);
+                        root.getChildren().remove(pauseText);
                     }
-                */
                 }
             }
         });
@@ -159,7 +193,8 @@ public class FlappyOiseau extends Application {
                             else if (viesRestantes == 0) {
                               GameOver();
                             }
-
+                        }else{
+                            sonPlayer(obstaclePlayer);
                         }
                     }
 
@@ -200,6 +235,10 @@ public class FlappyOiseau extends Application {
         primaryStage.show();
     }
 
+    private void sonPlayer(MediaPlayer media){
+        media.seek(Duration.ZERO);
+        media.play();
+    }
     private void perdreVie() {
         viesRestantes--;
 
