@@ -86,8 +86,9 @@ public class FlappyOiseau extends Application {
 
         // Creation de l'oiseau
         oiseauImage = new Image("C:/Users/mkism/IdeaProjects/flappoux/sounds/oiseau.png");
+        oiseau = new Rectangle(TAILLEOISEAU, TAILLEOISEAU, Color.DARKGOLDENROD);
         ImagePattern image = new ImagePattern(oiseauImage);
-        oiseau = new Rectangle(oiseauImage.getWidth(), oiseauImage.getHeight(), image);
+        oiseau.setFill(image);
         root.getChildren().add(oiseau);
 
 
