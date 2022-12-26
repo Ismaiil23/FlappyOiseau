@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -46,7 +47,7 @@ public class FlappyOiseau extends Application {
 
     private static final Media jumpSound = new Media(new File(jumpSoundPath).toURI().toString());
 
-    private static ImageView oiseauImage;
+    private static Image oiseauImage;
 
     // Variables du jeu
 
@@ -83,18 +84,12 @@ public class FlappyOiseau extends Application {
         Scene scene = new Scene(root, LARGEUR, HAUTEUR);
         primaryStage.setScene(scene);
 
-        Class<?> classiko = this.getClass();
         // Creation de l'oiseau
-        oiseauImage = new ImageView();
-        InputStream input = classiko.getResourceAsStream("C:/Users/mkism/IdeaProjects/flappoux/sounds/oiseau.png");
-        Image image = new Image(input);
-        oiseauImage.setImage(image);
-        oiseau = new Rectangle(TAILLEOISEAU, TAILLEOISEAU, Color.YELLOW);
+        oiseauImage = new Image("C:/Users/mkism/IdeaProjects/flappoux/sounds/oiseau.png");
+        ImagePattern image = new ImagePattern(oiseauImage);
+        oiseau = new Rectangle(oiseauImage.getWidth(), oiseauImage.getHeight(), image);
         root.getChildren().add(oiseau);
-        root.getChildren().add(oiseauImage);
-        //Positionner sur l'image sur l'objet
-        oiseauImage.setX(oiseau.getX());
-        oiseauImage.setY(oiseau.getY());
+
 
         // Creation des obstacles (haut et bas)
         obstacleTop = new Rectangle(LARGEUROBSTACLE, 0, LARGEUROBSTACLE, espaceInterObstacle / 2);
@@ -165,7 +160,7 @@ public class FlappyOiseau extends Application {
                 }else if (event.getCode() == KeyCode.ESCAPE) {
                     isPlaying = !isPlaying;
 
-
+                    sonPlayer(obstaclePlayer);
                     if(isPlaying==false) {
                         pauseButton = new Rectangle(LARGEUR / 2 - 50, HAUTEUR / 2, 100, 50);
                         pauseButton.setFill(Color.LIGHTBLUE);
@@ -201,7 +196,6 @@ public class FlappyOiseau extends Application {
                     // Verifier si l'oiseau touche obstacle ou non
                     if (obstacleX + LARGEUROBSTACLE > 0 && obstacleX <= LARGEUR) {
                         if (birdBounds.intersects(obstacleTop.getBoundsInParent()) || birdBounds.intersects(obstacleBottom.getBoundsInParent())) {
-                                sonPlayer(obstaclePlayer);
                             // Decrementer viesRestantes et afficher un message de fin de jeu
                             if(viesRestantes>=1){
                                 perdreVie();
@@ -222,7 +216,6 @@ public class FlappyOiseau extends Application {
 
                     // Verifie collision avec haut et bas de l'écran
                     if (positionOiseauY + TAILLEOISEAU / 2 > HAUTEUR) {
-                        sonPlayer(obstaclePlayer);
                         // Collision avec le bas
                         if(viesRestantes>=1){
                            perdreVie();
@@ -232,7 +225,6 @@ public class FlappyOiseau extends Application {
 
                         }
                     } else if (positionOiseauY+TAILLEOISEAU/2 < 0) {
-                        sonPlayer(obstaclePlayer);
                         // Collision avec le haut
                         if(viesRestantes>=1){
                             perdreVie();
@@ -256,6 +248,8 @@ public class FlappyOiseau extends Application {
         media.play();
     }
     private void perdreVie() {
+        sonPlayer(obstaclePlayer);
+
         viesRestantes--;
 
         score = 0;
@@ -286,9 +280,7 @@ public class FlappyOiseau extends Application {
             obstacleX = LARGEUR;
             obstacleY = 0;
 
-            //Positionner sur l'image sur l'objet
-            oiseauImage.setX(oiseau.getX());
-            oiseauImage.setY(oiseau.getY());
+
             // Taille du trou dans l'obstacle
             var tailleTrou = oiseau.getHeight()*6;
 
