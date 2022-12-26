@@ -1,5 +1,7 @@
 package com.example.flappoux;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
@@ -19,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Random;
 
 public class FlappyOiseau extends Application {
@@ -29,7 +32,7 @@ public class FlappyOiseau extends Application {
     private static final int espaceInterObstacle = 200;
     private static final int VITESSE = 5;
     private static final int TAILLEOISEAU = 30;
-    private static final int GRAVITE = 10;
+    private static final int HAUTEURSAUT = 10;
 
     private static final String ambianceSoundPath = "C:/Users/mkism/IdeaProjects/flappoux/sounds/ambiance.mp3";
 
@@ -42,6 +45,8 @@ public class FlappyOiseau extends Application {
     private static final String jumpSoundPath = "C:/Users/mkism/IdeaProjects/flappoux/sounds/saut.mp3";
 
     private static final Media jumpSound = new Media(new File(jumpSoundPath).toURI().toString());
+
+    private static ImageView oiseauImage;
 
     // Variables du jeu
 
@@ -78,9 +83,18 @@ public class FlappyOiseau extends Application {
         Scene scene = new Scene(root, LARGEUR, HAUTEUR);
         primaryStage.setScene(scene);
 
+        Class<?> classiko = this.getClass();
         // Creation de l'oiseau
+        oiseauImage = new ImageView();
+        InputStream input = classiko.getResourceAsStream("C:/Users/mkism/IdeaProjects/flappoux/sounds/oiseau.png");
+        Image image = new Image(input);
+        oiseauImage.setImage(image);
         oiseau = new Rectangle(TAILLEOISEAU, TAILLEOISEAU, Color.YELLOW);
         root.getChildren().add(oiseau);
+        root.getChildren().add(oiseauImage);
+        //Positionner sur l'image sur l'objet
+        oiseauImage.setX(oiseau.getX());
+        oiseauImage.setY(oiseau.getY());
 
         // Creation des obstacles (haut et bas)
         obstacleTop = new Rectangle(LARGEUROBSTACLE, 0, LARGEUROBSTACLE, espaceInterObstacle / 2);
@@ -138,13 +152,13 @@ public class FlappyOiseau extends Application {
             }
         });
 
-        // Evènement saut grâce à l'espace et evenement PAUSE grace à escape
+        // Evènement saut grâce à l'espace et evenement PAUSE grâce à échap
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
                     if(isPlaying==true){
-                    oiseauVitesseY = -GRAVITE;
+                    oiseauVitesseY = -HAUTEURSAUT;
 
                     sonPlayer(jumpPlayer);
                     }
@@ -164,7 +178,7 @@ public class FlappyOiseau extends Application {
                         pauseText.setY(pauseButton.getY() + pauseButton.getHeight() / 2);
                         root.getChildren().add(pauseText);
 
-                        // Désactiver les événements de la souris et du clavier
+                        // Désactiver les événements de la souris
                         scene.setOnMouseClicked(null);
                     } else {
                         // Supprimer le bouton PAUSE et le texte
@@ -186,15 +200,15 @@ public class FlappyOiseau extends Application {
                     Bounds birdBounds = oiseau.getBoundsInParent();
                     // Verifier si l'oiseau touche obstacle ou non
                     if (obstacleX + LARGEUROBSTACLE > 0 && obstacleX <= LARGEUR) {
-                        if (birdBounds.intersects(obstacleTop.getBoundsInParent()) || birdBounds.intersects(obstacleBottom.getBoundsInParent())) {                           // Decrementer viesRestantes et afficher un message de fin de jeu
+                        if (birdBounds.intersects(obstacleTop.getBoundsInParent()) || birdBounds.intersects(obstacleBottom.getBoundsInParent())) {
+                                sonPlayer(obstaclePlayer);
+                            // Decrementer viesRestantes et afficher un message de fin de jeu
                             if(viesRestantes>=1){
                                 perdreVie();
                             }
                             else if (viesRestantes == 0) {
                               GameOver();
                             }
-                        }else{
-                            sonPlayer(obstaclePlayer);
                         }
                     }
 
@@ -208,6 +222,7 @@ public class FlappyOiseau extends Application {
 
                     // Verifie collision avec haut et bas de l'écran
                     if (positionOiseauY + TAILLEOISEAU / 2 > HAUTEUR) {
+                        sonPlayer(obstaclePlayer);
                         // Collision avec le bas
                         if(viesRestantes>=1){
                            perdreVie();
@@ -217,6 +232,7 @@ public class FlappyOiseau extends Application {
 
                         }
                     } else if (positionOiseauY+TAILLEOISEAU/2 < 0) {
+                        sonPlayer(obstaclePlayer);
                         // Collision avec le haut
                         if(viesRestantes>=1){
                             perdreVie();
@@ -270,6 +286,9 @@ public class FlappyOiseau extends Application {
             obstacleX = LARGEUR;
             obstacleY = 0;
 
+            //Positionner sur l'image sur l'objet
+            oiseauImage.setX(oiseau.getX());
+            oiseauImage.setY(oiseau.getY());
             // Taille du trou dans l'obstacle
             var tailleTrou = oiseau.getHeight()*6;
 
