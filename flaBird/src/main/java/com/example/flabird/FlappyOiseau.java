@@ -82,6 +82,8 @@ public class FlappyOiseau extends Application {
     private Button restartButton = new Button("Recommencer");
     private Text loose = new Text("Game Over");
 
+    private Text record;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -145,6 +147,13 @@ public class FlappyOiseau extends Application {
         scoreText.setX(10);
         scoreText.setY(50);
         root.getChildren().add(scoreText);
+
+        record = new Text("Record: "+plusHautScore());
+        record.setFill(Color.BLUE);
+        record.setFont(Font.font(18));
+        record.setX(10);
+        record.setY(70);
+        root.getChildren().add(record);
 
 
         //endregion
@@ -287,6 +296,8 @@ public class FlappyOiseau extends Application {
     }
     private void perdreVie() {
         viesRestantes--;
+        record.setText("Record: " + plusHautScore());
+
 
         score = 0;
         positionOiseauY = HAUTEUR / 2;
@@ -363,6 +374,13 @@ public class FlappyOiseau extends Application {
         obstacleX = LARGEUR;
         obstacleY = 0;
         viesRestantes = 3;
+    }
+
+    private int plusHautScore(){
+        int x=0;
+        if(x<score)
+            x=score;
+        return x;
     }
 
 }
