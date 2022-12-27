@@ -156,7 +156,7 @@ public class FlappyOiseau extends Application {
 
         startGame(title, startButton, startText);
 
-        restartGame(title, startButton, startText, restartButton);
+        restartGame(restartButton);
 
 
         // Evènement saut grâce à l'espace et evenement PAUSE grâce à échap
@@ -269,7 +269,7 @@ public class FlappyOiseau extends Application {
         });
     }
 
-    private void restartGame(Text title, Rectangle startButton, Text startText, Button restartButton) {
+    private void restartGame(Button restartButton) {
         restartButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
