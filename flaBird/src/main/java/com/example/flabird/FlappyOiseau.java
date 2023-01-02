@@ -1,13 +1,9 @@
 package com.example.flabird;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.geometry.Pos;
+
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
@@ -37,7 +33,9 @@ public class FlappyOiseau extends Application {
     private static final int LARGEUROBSTACLE = 60;
     private static final int espaceInterObstacle = 200;
     private static final int TAILLEOISEAU = 50;
-    private static final int HAUTEURSAUT = 10;
+
+    private static final double HAUTEURSAUTBASE = 10;
+    private static final double VITESSEBASE = 5;
 
     private static final String ambianceSoundPath = "C:/Users/mkism/IdeaProjects/flaBird/sounds/ambiance.mp3";
 
@@ -71,7 +69,11 @@ public class FlappyOiseau extends Application {
 
     // Variables du jeu
 
-    private static int VITESSE = 5;
+
+    AnimationTimer boucleJeu;
+    private double vitesse = VITESSEBASE;
+
+    private double hauteurSaut = HAUTEURSAUTBASE;
     private int score = 0;
     private double positionOiseauY = HAUTEUR / 2;
     private double oiseauVitesseY = 0;
@@ -84,12 +86,10 @@ public class FlappyOiseau extends Application {
 
 
     // Création des boutons
-    private Button boutonSaut = new Button("Sauter");
-    private Button boutonPause = new Button("Pause");
-    private Button restartButton = new Button("Recommencer");
+    private final Button restartButton = new Button("Recommencer");
 
     // Création des textes
-    private Text loose = new Text("Game Over");
+    private final Text loose = new Text("Game Over");
     private Text pauseText;
     Text vies = new Text("Vies : " + viesRestantes);
     Text title = new Text("Flappy Oiseau");
@@ -103,11 +103,6 @@ public class FlappyOiseau extends Application {
     private Rectangle obstacleTop;
     private Rectangle obstacleBottom;
     private Rectangle pauseButton ;
-
-
-
-
-
 
 
     public static void main(String[] args) {
@@ -207,7 +202,7 @@ public class FlappyOiseau extends Application {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
                     if(isPlaying==true){
-                        oiseauVitesseY = -HAUTEURSAUT;
+                        oiseauVitesseY = -hauteurSaut;
 
                         sonPlayer(jumpPlayer);
                     }
@@ -239,7 +234,7 @@ public class FlappyOiseau extends Application {
         });
 
                     // Boucle de jeu
-            AnimationTimer boucleJeu = new AnimationTimer() {
+             boucleJeu = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
                     if(isPlaying) {
@@ -284,7 +279,7 @@ public class FlappyOiseau extends Application {
             if(viesRestantes>=1){
                 perdreVie();
             }
-            else if (viesRestantes == 0) {
+            else if (viesRestantes < 1) {
                 GameOver();
 
             }
@@ -293,7 +288,7 @@ public class FlappyOiseau extends Application {
             if(viesRestantes>=1){
                 perdreVie();
             }
-            else if (viesRestantes == 0) {
+            else if (viesRestantes < 1) {
                 GameOver();
 
             }
@@ -357,7 +352,7 @@ public class FlappyOiseau extends Application {
     private void update() {
         // Faire tomber l'oiseau et déplacer les obstacles vers la gauche
         positionOiseauY += oiseauVitesseY;
-        obstacleX -= VITESSE;
+        obstacleX -= vitesse;
 
         // Si l'obstacle est hors de l'ecran
         if (obstacleX + LARGEUROBSTACLE < 0) {
@@ -399,8 +394,11 @@ public class FlappyOiseau extends Application {
             // MAJ score
             score++;
 
-            if(score>10 && VITESSE<=8)
-                VITESSE+=0.1;
+            if(score>5 && vitesse<=7.5){
+                vitesse+=0.1;
+                if(hauteurSaut>=8)
+                    hauteurSaut-=0.1;
+            }
         }
 
 
@@ -416,12 +414,15 @@ public class FlappyOiseau extends Application {
     }
 
     private void resetGame() {
+        hauteurSaut=HAUTEURSAUTBASE;
+        vitesse=VITESSEBASE;
         score = 0;
         positionOiseauY = HAUTEUR / 2;
         oiseauVitesseY = 0;
         obstacleX = LARGEUR;
         obstacleY = 0;
         viesRestantes = 3;
+
     }
 
     private int plusHautScore(){
