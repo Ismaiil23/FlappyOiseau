@@ -37,19 +37,19 @@ public class FlappyOiseau extends Application {
     private static final double HAUTEURSAUTBASE = 10;
     private static final double VITESSEBASE = 5;
 
-    private static final String ambianceSoundPath = "C:/Users/mkism/IdeaProjects/flaBird/sounds/ambiance.mp3";
+    private static final String ambianceSoundPath = "flaBird/sounds/ambiance.mp3";
 
     private static final Media ambianceSound = new Media(new File(ambianceSoundPath).toURI().toString());
 
-    private static final String obstacleSoundPath = "C:/Users/mkism/IdeaProjects/flaBird/sounds/franchissementobstacle.mp3";
+    private static final String obstacleSoundPath = "flaBird/sounds/franchissementobstacle.mp3";
 
     private static final Media obstacleSound = new Media(new File(obstacleSoundPath).toURI().toString());
 
-    private static final String jumpSoundPath = "C:/Users/mkism/IdeaProjects/flaBird/sounds/saut.mp3";
+    private static final String jumpSoundPath = "flaBird/sounds/saut.mp3";
 
     private static final Media jumpSound = new Media(new File(jumpSoundPath).toURI().toString());
 
-    private static final String gameOverSoundPath = "C:/Users/mkism/IdeaProjects/flaBird/sounds/gameOver.mp3";
+    private static final String gameOverSoundPath = "flaBird/sounds/gameOver.mp3";
 
     private static final Media gameOverSound = new Media(new File(gameOverSoundPath).toURI().toString());
 
