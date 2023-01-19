@@ -253,8 +253,8 @@ public class FlappyOiseau extends Application {
 
     private void collisionObstacle() {
         Bounds birdBounds = oiseau.getBoundsInParent();
-        // Verifier si l'oiseau touche obstacle ou non
         if (obstacleX + LARGEUROBSTACLE > 0 && obstacleX <= LARGEUR) {
+            // Verifier si l'oiseau touche obstacle ou non
             if (birdBounds.intersects(obstacleTop.getBoundsInParent()) || birdBounds.intersects(obstacleBottom.getBoundsInParent())) {
                 // Decrementer viesRestantes et afficher un message de fin de jeu
                 if(viesRestantes>=1){
