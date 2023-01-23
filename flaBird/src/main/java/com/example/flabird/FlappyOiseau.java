@@ -79,7 +79,7 @@ public class FlappyOiseau extends Application {
     private double oiseauVitesseY = 0;
     private double obstacleX = LARGEUR;
     private double obstacleY = 0;
-    private int viesRestantes = 3;
+    private int viesRestantes = 1;
     private int highestScore=0;
     boolean isPlaying = false;
     private Group root;
@@ -91,7 +91,6 @@ public class FlappyOiseau extends Application {
     // Création des textes
     private final Text loose = new Text("Game Over");
     private Text pauseText;
-    Text vies = new Text("Vies : " + viesRestantes);
     Text title = new Text("Flappy Oiseau");
     Text scoreText = new Text("Score: 0");
     Text startText = new Text("Start");
@@ -143,16 +142,22 @@ public class FlappyOiseau extends Application {
         obstacleBottom = new Rectangle(LARGEUROBSTACLE, espaceInterObstacle / 2 + espaceInterObstacle, LARGEUROBSTACLE, HAUTEUR - espaceInterObstacle / 2 - espaceInterObstacle);
         obstacleBottom.setX(200);
         obstacleTop.setX(200);
+        obstacleTop.setFill(Color.SANDYBROWN);
+        obstacleBottom.setFill(Color.DARKGOLDENROD);
         root.getChildren().add(obstacleTop);
         root.getChildren().add(obstacleBottom);
 
 
         //region Text
-        vies.setFill(Color.BLACK);
-        vies.setFont(Font.font(18));
-        vies.setX(10);
-        vies.setY(30);
-        root.getChildren().add(vies);
+
+        loose.setFill(Color.BLACK);
+        loose.setFont(Font.font(30));
+        loose.setX(LARGEUR / 2 - loose.getLayoutBounds().getWidth() / 2);
+        loose.setY(HAUTEUR / 2 - loose.getLayoutBounds().getHeight() / 2);
+
+        restartButton.setLayoutX(loose.getX() - restartButton.getWidth());
+        restartButton.setLayoutY(loose.getY() + HAUTEUR/15);
+        restartButton.setStyle("-fx-background-color: #DCEDC8; -fx-text-fill: red; -fx-font-size: 18px;");
 
         title.setFill(Color.BLACK);
         title.setFont(Font.font(32));
@@ -160,27 +165,23 @@ public class FlappyOiseau extends Application {
         title.setY(HAUTEUR / 2 - 100);
         root.getChildren().add(title);
 
-        Rectangle startButton = new Rectangle(LARGEUR / 2 - 50, HAUTEUR / 2, 100, 50);
-        startButton.setFill(Color.LIGHTGREEN);
+        final Button startButton = new Button("Start");
+        startButton.setLayoutX(loose.getX() - startButton.getWidth());
+        startButton.setLayoutY(loose.getY() + HAUTEUR/15);
+        startButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 40px;");
         root.getChildren().add(startButton);
-
-        startText.setFill(Color.BLACK);
-        startText.setFont(Font.font(18));
-        startText.setX(LARGEUR / 2 - startText.getLayoutBounds().getWidth() / 2);
-        startText.setY(startButton.getY() + startButton.getHeight()/2);
-        root.getChildren().add(startText);
 
         scoreText.setFill(Color.BLACK);
         scoreText.setFont(Font.font(18));
         scoreText.setX(10);
-        scoreText.setY(50);
+        scoreText.setY(30);
         root.getChildren().add(scoreText);
 
         record = new Text("Record: "+ plusHautScore());
         record.setFill(Color.BLUE);
         record.setFont(Font.font(18));
         record.setX(10);
-        record.setY(70);
+        record.setY(50);
         root.getChildren().add(record);
 
 
@@ -201,6 +202,7 @@ public class FlappyOiseau extends Application {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
+                    isPlaying=true;
                     if(isPlaying==true){
                         oiseauVitesseY = -hauteurSaut;
 
@@ -233,7 +235,7 @@ public class FlappyOiseau extends Application {
             }
         });
 
-                    // Boucle de jeu
+             // Boucle de jeu
              boucleJeu = new AnimationTimer() {
                 @Override
                 public void handle(long now) {
@@ -256,7 +258,7 @@ public class FlappyOiseau extends Application {
         if (obstacleX + LARGEUROBSTACLE > 0 && obstacleX <= LARGEUR) {
             // Verifier si l'oiseau touche obstacle ou non
             if (birdBounds.intersects(obstacleTop.getBoundsInParent()) || birdBounds.intersects(obstacleBottom.getBoundsInParent())) {
-                // Decrementer viesRestantes et afficher un message de fin de jeu
+                // Decrémenter viesRestantes et afficher un message de fin de jeu
                 if(viesRestantes>=1){
                     perdreVie();
                 }
@@ -296,14 +298,13 @@ public class FlappyOiseau extends Application {
     }
 
 
-    private void startGame(Text title, Rectangle startButton, Text startText) {
+    private void startGame(Text title, Button startButton, Text startText) {
         startButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 root.getChildren().remove(title);
                 root.getChildren().remove(startButton);
                 root.getChildren().remove(startText);
-                isPlaying=true;
             }
         });
     }
@@ -315,7 +316,6 @@ public class FlappyOiseau extends Application {
                 root.getChildren().remove(restartButton);
                 root.getChildren().remove(loose);
                 resetGame();
-                isPlaying=true;
             }
         });
     }
@@ -326,27 +326,14 @@ public class FlappyOiseau extends Application {
     }
     private void perdreVie() {
         viesRestantes--;
-        record.setText("Record: " + plusHautScore());
-
-
-        score = 0;
-        positionOiseauY = HAUTEUR / 2;
-        oiseauVitesseY = 0;
-        obstacleX = LARGEUR;
-        obstacleY = 0;
     }
 
     private void GameOver() {
-        loose.setFill(Color.BLACK);
-        loose.setFont(Font.font(18));
-        loose.setX(LARGEUR / 2 - loose.getLayoutBounds().getWidth() / 2);
-        loose.setY(HAUTEUR / 2 - loose.getLayoutBounds().getHeight() / 2);
         root.getChildren().add(loose);
+        root.getChildren().add(restartButton);
         ambiancePlayer.stop();
         sonPlayer(gameOverPlayer);
         isPlaying = false;
-
-        root.getChildren().add(restartButton);
     }
 
     private void update() {
@@ -360,6 +347,13 @@ public class FlappyOiseau extends Application {
 
             obstacleX = LARGEUR;
             obstacleY = 0;
+
+            if(score>=10 && score<20){
+                //sonPlayer(sonStressant);
+                obstacleTop.setFill(Color.DARKGOLDENROD);
+                obstacleBottom.setFill(Color.SANDYBROWN);
+            }
+
 
 
             // Taille du trou dans l'obstacle
@@ -396,8 +390,6 @@ public class FlappyOiseau extends Application {
 
             if(score>5 && vitesse<=7.5){
                 vitesse+=0.1;
-                if(hauteurSaut>=8)
-                    hauteurSaut-=0.1;
             }
         }
 
@@ -406,24 +398,29 @@ public class FlappyOiseau extends Application {
         oiseau.setY(positionOiseauY);
         obstacleTop.setX(obstacleX);
         obstacleBottom.setX(obstacleX);
-        // MAJ valeurs score et vies
-        vies.setText("Vies : " + viesRestantes);
+        // MAJ valeurs score et record
         scoreText.setText("Score: " + score);
+        record.setText("Record: " + plusHautScore());
         // MAJ vitesse oiseau en Y
         oiseauVitesseY += 0.5;
     }
 
     private void resetGame() {
-        hauteurSaut=HAUTEURSAUTBASE;
-        vitesse=VITESSEBASE;
+        isPlaying = false;
+        oiseau.setX(30);
+        oiseau.setY(HAUTEUR/2-oiseau.getHeight());
+        obstacleBottom.setX(250);
+        obstacleTop.setX(250);
+        vitesse = VITESSEBASE;
+        hauteurSaut = HAUTEURSAUTBASE;
         score = 0;
         positionOiseauY = HAUTEUR / 2;
         oiseauVitesseY = 0;
         obstacleX = LARGEUR;
         obstacleY = 0;
-        viesRestantes = 3;
-
+        viesRestantes = 1;
     }
+
 
     private int plusHautScore(){
         if(highestScore<score)
