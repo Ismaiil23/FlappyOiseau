@@ -4,6 +4,7 @@ package com.example.flabird;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.animation.AnimationTimer;
@@ -25,6 +26,8 @@ import javafx.util.Duration;
 
 import java.io.File;
 import java.util.Random;
+
+import static javax.swing.text.StyleConstants.setBackground;
 
 public class FlappyOiseau extends Application {
     // Constantes
@@ -354,35 +357,7 @@ public class FlappyOiseau extends Application {
                 obstacleBottom.setFill(Color.SANDYBROWN);
             }
 
-
-
-            // Taille du trou dans l'obstacle
-            var tailleTrou = oiseau.getHeight()*5;
-
-            //Génération aléatoire apparition des obstacles
-            Random rand= new Random();
-            int rnd=rand.nextInt(2 - 1 + 1) + 1;
-            if(rnd==1){
-                int rndHeightTop = rand.nextInt((HAUTEUR-HAUTEUR/3) - 1 + 1) + 1;
-                obstacleTop.setHeight(rndHeightTop);
-                double complementBottom=(HAUTEUR-obstacleTop.getHeight())-tailleTrou;
-                obstacleBottom.setHeight(complementBottom);
-
-                obstacleTop.setY(obstacleY);
-                obstacleBottom.setY(HAUTEUR- obstacleBottom.getHeight());
-                obstacleTop.setX(obstacleX);
-                obstacleBottom.setX(obstacleX);
-            }else{
-                int rndHeightBottom = rand.nextInt((HAUTEUR-HAUTEUR/3) - 1 + 1) + 1;
-                obstacleBottom.setHeight(rndHeightBottom);
-                double complementTop=(HAUTEUR-obstacleBottom.getHeight())-tailleTrou;
-                obstacleTop.setHeight(complementTop);
-
-                obstacleTop.setY(obstacleY);
-                obstacleBottom.setY(HAUTEUR- obstacleBottom.getHeight());
-                obstacleTop.setX(obstacleX);
-                obstacleBottom.setX(obstacleX);
-            }
+            randomObstacle();
 
 
             // MAJ score
@@ -405,10 +380,41 @@ public class FlappyOiseau extends Application {
         oiseauVitesseY += 0.5;
     }
 
+    private void randomObstacle() {
+        // Taille du trou dans l'obstacle
+        var tailleTrou = oiseau.getHeight()*5;
+
+        //Génération aléatoire apparition des obstacles
+        Random rand= new Random();
+        int rnd=rand.nextInt(2 - 1 + 1) + 1;
+        if(rnd==1){
+            int rndHeightTop = rand.nextInt((HAUTEUR-HAUTEUR/3) - 1 + 1) + 1;
+            obstacleTop.setHeight(rndHeightTop);
+            double complementBottom=(HAUTEUR-obstacleTop.getHeight())- tailleTrou;
+            obstacleBottom.setHeight(complementBottom);
+
+            obstacleTop.setY(obstacleY);
+            obstacleBottom.setY(HAUTEUR- obstacleBottom.getHeight());
+            obstacleTop.setX(obstacleX);
+            obstacleBottom.setX(obstacleX);
+        }else{
+            int rndHeightBottom = rand.nextInt((HAUTEUR-HAUTEUR/3) - 1 + 1) + 1;
+            obstacleBottom.setHeight(rndHeightBottom);
+            double complementTop=(HAUTEUR-obstacleBottom.getHeight())- tailleTrou;
+            obstacleTop.setHeight(complementTop);
+
+            obstacleTop.setY(obstacleY);
+            obstacleBottom.setY(HAUTEUR- obstacleBottom.getHeight());
+            obstacleTop.setX(obstacleX);
+            obstacleBottom.setX(obstacleX);
+        }
+    }
+
     private void resetGame() {
         isPlaying = false;
         oiseau.setX(30);
         oiseau.setY(HAUTEUR/2-oiseau.getHeight());
+        randomObstacle();
         obstacleBottom.setX(250);
         obstacleTop.setX(250);
         vitesse = VITESSEBASE;
