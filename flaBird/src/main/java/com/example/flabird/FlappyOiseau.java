@@ -40,19 +40,19 @@ public class FlappyOiseau extends Application {
     private static final double HAUTEURSAUTBASE = 10;
     private static final double VITESSEBASE = 5;
 
-    private static final String ambianceSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sounds\\ambiance.mp3";
+    private static final String ambianceSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sprites\\ambiance.mp3";
 
     private static final Media ambianceSound = new Media(new File(ambianceSoundPath).toURI().toString());
 
-    private static final String obstacleSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sounds\\franchissementobstacle.mp3";
+    private static final String obstacleSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sprites\\franchissementobstacle.mp3";
 
     private static final Media obstacleSound = new Media(new File(obstacleSoundPath).toURI().toString());
 
-    private static final String jumpSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sounds\\saut.mp3";
+    private static final String jumpSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sprites\\saut.mp3";
 
     private static final Media jumpSound = new Media(new File(jumpSoundPath).toURI().toString());
 
-    private static final String gameOverSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sounds\\gameOver.mp3";
+    private static final String gameOverSoundPath = "C:\\Users\\mkism\\Documents\\jeuFlappy\\FlappyOiseau\\flaBird\\sprites\\gameOver.mp3";
 
     private static final Media gameOverSound = new Media(new File(gameOverSoundPath).toURI().toString());
 
@@ -133,7 +133,7 @@ public class FlappyOiseau extends Application {
         oiseau.setX(30);
         oiseau.setY(HAUTEUR/2-oiseau.getHeight());
         root.getChildren().add(oiseau);
-        String cheminImage ="C:/Users/mkism/IdeaProjects/flaBird/sounds/oiseau.png";
+        String cheminImage ="C:/Users/mkism/IdeaProjects/flaBird/sprites/oiseau.png";
         Image oiseauImage = new Image(cheminImage);
         ImageView oisImgView = new ImageView(oiseauImage);
         oiseau.setFill(new ImagePattern((oisImgView.getImage())));
