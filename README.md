@@ -8,7 +8,7 @@ Le jeu comprend plusieurs éléments, tels que l'oiseau, les obstacles (un obsta
 
 La logique du jeu est gérée par un objet AnimationTimer qui met à jour l'état du jeu en fonction du temps écoulé. Des événements clavier et souris sont également utilisés pour détecter les actions de l'utilisateur et mettre à jour l'état du jeu en conséquence.
 
-Le code du jeu est organisé en plusieurs classes et méthodes, avec des constantes définissant les dimensions et la vitesse du jeu, ainsi que des variables pour stocker l'état du jeu et les éléments graphiques du jeu.
+Le code du jeu est organisé en plusieurs méthodes, avec des constantes définissant les dimensions et la vitesse du jeu, ainsi que des variables pour stocker l'état du jeu et les éléments graphiques du jeu.
 
 
 
